@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>في رحاب القرآن - إدارة التسميع</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- الهيدر والعنوان الرئيسي -->
+    <header class="header">
+        <h1>في رحاب القرآن</h1>
+        <p>مسار فردي للحفظ والمراجعة والإتقان</p>
+        <div id="userInfoHeader" style="margin-top: 10px; font-size: 0.85rem; display: none;">
+            مرحباً بك: <strong id="loggedInUserTitle"></strong> | 
+            <button onclick="logout()" style="background: #c0392b; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer;">تسجيل الخروج</button>
+        </div>
+    </header>
+
+    <!-- شاشة تسجيل الدخول -->
+    <main class="container" id="login-section">
+        <h2>تسجيل الدخول</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>اسم المستخدم (اسم الطالب أو المعلم)</label>
+                <input type="text" id="loginUsername" placeholder="ادخل اسمك المسجل">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPassword" placeholder="ادخل كلمة المرور">
+            </div>
+            <button class="btn-primary" onclick="login()">دخول</button>
+            <p style="font-size: 0.8rem; color: #7f8c8d; text-align: center; margin-top: 10px;">
+                💡 حساب المعلم الافتراضي: admin | كلمة المرور: 1234
+            </p>
+        </div>
+    </main>
+
+    <!-- محتوى التطبيق بعد تسجيل الدخول -->
+    <div id="app-content" style="display: none;">
+
+        <!-- تنبيه النسخة التجريبية -->
+        <div class="alert-box">
+            نسخة تجريبية: تُحفظ البيانات في هذا المتصفح على هذا الجهاز فقط.
+        </div>
+
+        <!-- أزرار التنقل الرئيسية (تظهر للمعلم) -->
+        <nav class="main-nav" id="teacherNav">
+            <button class="nav-btn active" onclick="switchTab('home')">الرئيسية</button>
+            <button class="nav-btn" onclick="switchTab('students')">الطلبة</button>
+            <button class="nav-btn" onclick="switchTab('record')">تسجيل التسميع</button>
+            <button class="nav-btn" onclick="switchTab('homework')">الواجبات</button>
+            <button class="nav-btn" onclick="switchTab('backup')">النسخ الاحتياطي</button>
+        </nav>
+
+        <!-- القسم الرئيسي: لوحة التحكم -->
+        <main class="container" id="home-section">
+            <h2>لوحة المحفّظ</h2>
+            <p>أدر مسارات طلبتك وسجّل التسميع والواجبات الفردية من مكان واحد.</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>الطلبة</h3>
+                    <span class="stat-number" id="studentsCount">0</span>
+                </div>
+                <div class="stat-card">
+                    <h3>سجلات التسميع</h3>
+                    <span class="stat-number" id="recordsCount">0</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- قسم إدارة الطلبة (للمعلم) -->
+        <main class="container" id="students-section" style="display: none;">
+            <h2>إدارة الطلبة</h2>
+            <div class="form-card">
+                <div class="form-group">
+                    <label>اسم الطالب (اسم المستخدم للدخول)</label>
+                    <input type="text" id="studentName" placeholder="مثال: سيف الشرعبي">
+                </div>
+                <div class="form-group">
+                    <label>كلمة مرور الطالب</label>
+                    <input type="password" id="studentPassword" placeholder="حدد كلمة مرور للطالب">
+                </div>
+                <div class="form-group">
+                    <label>البداية (السورة / الآيات)</label>
+                    <input type="text" id="studentStart" placeholder="مثال: الاحقاف 1-35">
+                </div>
+                <div class="form-group">
+                    <label>المستوى الحالي</label>
+                    <select id="studentLevel">
+                        <option value="مبتدئ">مبتدئ</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="متقن">متقن</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="addStudent()">إضافة الطالب</button>
+            </div>
+
+            <h3>قائمة الطلبة</h3>
+            <div class="form-group" style="margin-top: 10px;">
+                <input type="text" id="searchStudentInput" placeholder="🔍 ابحث عن طالب بالاسم..." oninput="renderStudents()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+            </div>
+            <div id="studentsList"></div>
+        </main>
+
+        <!-- قسم الملف الشخصي للطالب (يظهر للطالب أو عند استعراضه) -->
+        <main class="container" id="student-profile-section" style="display: none;">
+            <h2>ملف الطالب: <span id="profileStudentName" style="color: #1b4d3e;"></span></h2>
+            <button class="btn-primary" id="backToStudentsBtn" onclick="switchTab('students')" style="background-color: #7f8c8d; margin-bottom: 15px;">← العودة لقائمة الطلبة</button>
+            
+            <div class="form-card">
+                <h3 style="margin-top:0;">سجلات التسميع الخاصة بك</h3>
+                <div id="profileRecordsList"></div>
+            </div>
+
+            <div class="form-card" style="margin-top: 15px;">
+                <h3 style="margin-top:0;">الواجبات المسندة إليك</h3>
+                <div id="profileHomeworkList"></div>
+            </div>
+        </main>
+
+        <!-- قسم تسجيل التسميع -->
+        <main class="container" id="record-section" style="display: none;">
+            <h2>تسجيل التسميع المباشر</h2>
+            <div class="form-card">
+                <div class="form-group">
+                    <label>اختر الطالب</label>
+                    <select id="recordStudentSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>السورة والآيات / المقدار</label>
+                    <input type="text" id="recordSurah" placeholder="مثال: الذاريات 1-30">
+                </div>
+
+                <div class="form-group">
+                    <label>تقييم الأداء</label>
+                    <select id="recordEvaluation">
+                        <option value="ممتاز 🌟">ممتاز 🌟</option>
+                        <option value="جيد جداً 👍">جيد جداً 👍</option>
+                        <option value="جيد متوسط 📖">جيد متوسط 📖</option>
+                        <option value="يحتاج مراجعة ⚠️">يحتاج مراجعة ⚠️</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>ملاحظات المعلم</label>
+                    <textarea id="recordNotes" rows="2" placeholder="اكتب ملاحظات حول التجويد، الأخطاء، أو التوجيهات..." style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit;"></textarea>
+                </div>
+                
+                <label style="font-weight: bold; color: #1b4d3e; margin-bottom: 8px; display: block;">تسجيل صوت الطالب</label>
+                <div class="recorder-controls">
+                    <button class="rec-btn start" onclick="startRecording()">🎤 بدء التسجيل</button>
+                    <button class="rec-btn stop" onclick="stopRecording()">⏹ إيقاف</button>
+                    <button class="rec-btn reset" onclick="resetRecording()">🗑 مسح</button>
+                </div>
+
+                <div id="recordStatus" style="text-align: center; font-size: 0.95rem; font-weight: bold; color: #d9534f; margin-top: 15px;">
+                    ⚪ جاهز للتسجيل
+                </div>
+
+                <audio id="audioPlayback" controls style="width: 100%; margin-top: 15px; border-radius: 8px;"></audio>
+                
+                <button class="btn-primary" style="margin-top: 15px;" onclick="saveRecord()">حفظ سجل التسميع والتقييم</button>
+            </div>
+
+            <h3>سجل التسميع والملاحظات</h3>
+            <div id="recordsList"></div>
+        </main>
+
+        <!-- قسم الواجبات اليومية -->
+        <main class="container" id="homework-section" style="display: none;">
+            <h2>إدارة واجبات الحفظ والمراجعة</h2>
+            <div class="form-card">
+                <div class="form-group">
+                    <label>اختر الطالب</label>
+                    <select id="hwStudentSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>نوع الواجب</label>
+                    <select id="hwType">
+                        <option value="حفظ جديد">حفظ جديد</option>
+                        <option value="مراجعة صغرى">مراجعة صغرى</option>
+                        <option value="مراجعة كبرى">مراجعة كبرى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>مقدار الواجب (السورة والآيات)</label>
+                    <input type="text" id="hwTarget" placeholder="مثال: سورة الملك 1-30">
+                </div>
+                <button class="btn-primary" onclick="addHomework()">إسناد الواجب</button>
+            </div>
+            <h3>قائمة الواجبات الحالية</h3>
+            <div id="homeworkList"></div>
+        </main>
+
+        <!-- قسم النسخ الاحتياطي -->
+        <main class="container" id="backup-section" style="display: none;">
+            <h2>النسخ الاحتياطي والبيانات</h2>
+            <p>قم بحفظ بيانات تطبيقك بأمان لاسترجاعها في أي وقت أو نقلها لجهاز آخر.</p>
+            
+            <div class="form-card" style="text-align: center;">
+                <h3 style="margin-top:0;">تصدير النسخة الاحتياطية</h3>
+                <button class="btn-primary" onclick="exportData()" style="background-color: #27ae60;">📥 تحميل نسخة احتياطية (JSON)</button>
+            </div>
+
+            <div class="form-card" style="text-align: center; margin-top: 15px;">
+                <h3 style="margin-top:0;">استعادة البيانات</h3>
+                <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                <button class="btn-primary" onclick="document.getElementById('importFile').click()" style="background-color: #2980b9;">📤 استعادة البيانات من ملف</button>
+            </div>
+
+            <div class="form-card" style="text-align: center; margin-top: 15px; border-top: 2px solid #e74c3c;">
+                <h3 style="margin-top:0; color: #c0392b;">إعادة الضبط</h3>
+                <button class="btn-primary" onclick="clearAllData()" style="background-color: #c0392b;">⚠️ حذف كافة البيانات</button>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

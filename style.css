@@ -1,0 +1,216 @@
+:root {
+    --primary-color: #1b4d3e;
+    --primary-light: #2e7d62;
+    --accent-color: #d4af37;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --text-light: #7f8c8d;
+    --danger-color: #c0392b;
+    --success-color: #27ae60;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    text-align: right;
+}
+
+/* الهيدر الرئيسي */
+.header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.header h1 {
+    margin: 0 0 5px 0;
+    font-size: 1.6rem;
+}
+
+.header p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* شريط التنبيهات */
+.alert-box {
+    background-color: #fef9e7;
+    color: #b7950b;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #fcf3cf;
+}
+
+/* شريط التنقل الرئيسي */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.nav-btn {
+    background-color: #ecf0f1;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 5px rgba(27, 77, 62, 0.3);
+}
+
+/* الحاويات والأقسام */
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.container h2 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 5px;
+}
+
+/* بطاقات الإحصائيات */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-top: 4px solid var(--accent-color);
+}
+
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* بطاقات النماذج والإدخال */
+.form-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+}
+
+/* الأزرار العامة */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+}
+
+/* أزرار مسجل الصوت */
+.recorder-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.rec-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: white;
+}
+
+.rec-btn.start { background-color: var(--success-color); }
+.rec-btn.stop { background-color: #e67e22; }
+.rec-btn.reset { background-color: var(--danger-color); }
+
+/* عناصر القوائم (الطلاب، السجلات، الواجبات) */
+.student-item {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    border-right: 4px solid var(--primary-color);
+}
